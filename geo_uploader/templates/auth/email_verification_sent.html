@@ -1,0 +1,49 @@
+{% set page_title = 'Email Verification Sent' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-envelope-check" style="font-size: 4rem; color: #28a745;"></i>
+                    </div>
+
+                    <h3 class="mb-4">{{ page_title }}</h3>
+
+                    <div class="alert alert-success" role="alert">
+                        <p class="mb-2">We've sent a verification email to:</p>
+                        <strong>{{ email }}</strong>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        Please check your email and click the verification link to activate your account.
+                        The link will expire in 24 hours.
+                    </p>
+
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+                            Go to Login
+                        </a>
+                        <a href="{{ url_for('auth.resend_verification') }}" class="btn btn-outline-secondary">
+                            Didn't receive the email? Resend
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-muted">
+                        <small>
+                            <strong>Check your spam folder</strong> if you don't see the email in your inbox.<br>
+                            If you continue to have problems, please contact support.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

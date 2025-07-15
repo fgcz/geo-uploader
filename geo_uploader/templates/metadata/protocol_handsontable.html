@@ -1,0 +1,57 @@
+<div class="container mt-5">
+    <!-- Handsontable Container-->
+    <div class='mt-5' id="protocol_handsontable"></div>
+
+
+    <!-- Save Data Button -->
+    <div class="row mb-4">
+        <div class="col text-start">
+            <button class="btn btn-info save_metadata_btn" {% if not can_edit %} disabled {% endif %}>
+                Save data
+            </button>
+
+        </div>
+    </div>
+
+    <form method="post" id="metadata-study-resize-protocol">
+        {{ protocolAddForm.hidden_tag() }}
+        <div class="row mb-4">
+            <!-- Data Step Buttons -->
+            <div class="col-6">
+                <h5>Data Steps</h5>
+                <button type="button" class="btn btn-outline-info" {% if not can_edit %} disabled {% endif %}
+                        onclick="resizeProtocolForm('add_step')">
+                    Add Data Processing Step
+                </button>
+                <button type="button" class="btn btn-outline-warning" {% if not can_edit or step_disabled %} disabled {%
+                        endif %}
+                        onclick="resizeProtocolForm('remove_step')">
+                    Remove Data Processing Step
+                </button>
+            </div>
+
+            <!-- Data File Format Buttons -->
+            <div class="col-6">
+                <h5>Data Format</h5>
+                <button type="button" class="btn btn-outline-info"
+                        {% if not can_edit %} disabled {% endif %}
+                        onclick="resizeProtocolForm('add_format')">
+                    Add Data File Format
+                </button>
+                <button type="button" class="btn btn-outline-warning"
+                        {% if not can_edit or format_disabled %} disabled {% endif %}
+                        onclick="resizeProtocolForm('remove_format')">
+                    Remove Data File Format
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<style>
+    .handsontable td {
+        font-size: 15px;
+    }
+</style>

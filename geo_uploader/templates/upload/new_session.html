@@ -1,0 +1,101 @@
+{% set page_title = 'New Upload' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">New Session</h1>
+
+    <form method="POST" id="new-session-form" action="{{ url_for('upload.view_sample_selection') }}">
+        {{ new_session_files_form.hidden_tag() }}
+
+        <div class="form-group">
+            <label for="session_title">Upload Session Title</label>
+            <input type="text" id="session_title" name="session_title" class="form-control" required autofocus
+                   placeholder="RNA_Bulk_..."
+            />
+            <small class="form-text text-muted">Provide an identifier for your session.</small>
+        </div>
+
+{#        <div class="form-group d-flex justify-content-between align-items-center mb-4">#}
+{#            <button type="button" class="btn btn-primary ml-3 px-4" onclick="loadFolderTree()">#}
+{#                <i class="bi bi-folder2-open mr-2"></i>Load Folders#}
+{#            </button>#}
+{#        </div>#}
+
+        <div class="row mb-4">
+           <!-- Folder Tree Column -->
+            <div class="col-md-6">
+                <div class="tree-section">
+                    <h3 class="section-header">
+                        <i class="bi bi-folder2 mr-2"></i>Select Folder
+                    </h3>
+                    <p class="text-muted mb-3">Please select a folder containing your raw and processed data files.</p>
+                    <div id="folder_tree_container" class="tree-container"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="samples_inside_folder_indicator" style="display: none !important"></div>
+
+        <!-- Loading Indicator (smaller and centered) -->
+        <div id="loading_indicator" class="mt-4 text-center" style="display:none;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mt-2">Loading folder tree, please wait...</p>
+        </div>
+
+{#        <div class="form-group">#}
+{#            <label for="remote_password">Select your bioinformatician</label>#}
+{#            {{ new_session_files_form.user_dropdown(class="form-control", id="user_dropdown",#}
+{#             placeholder="Leave empty for no supervisor...", list="user-options") }}#}
+{#            <datalist id="user-options">#}
+{#                {% if email_users %}#}
+{#                {% for user in email_users %}#}
+{#                <option value="{{ user.full_name }}" data-id="{{ user.id }}">{{ user.full_name }}</option>#}
+{#                {% endfor %}#}
+{#                {% else %}#}
+{#                <option value="No eligible users available" disabled>No eligible users available</option>#}
+{#                {% endif %}#}
+{#            </datalist>#}
+{##}
+{#            {{ new_session_files_form.selected_user_id }}#}
+{##}
+{#            <small class="form-text text-muted">Enter your supervising bioinformatician who will help you in this#}
+{#                upload</small>#}
+{#        </div>#}
+
+        <div class="form-group">
+            <label for="remote_folder">GEO remote folder</label>
+            <input type="text" id="remote_folder" name="remote_folder" class="form-control" readonly
+                   value="{{new_session_files_form.remote_folder.data}}"
+                   placeholder="uploads/[unique_repo_id]"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="remote_password">GEO remote password</label>
+            <input type="text" id="remote_password" name="remote_password" class="form-control" readonly
+                   value="{{new_session_files_form.remote_password.data}}"
+                   placeholder="Enter geo remote password"
+            />
+        </div>
+
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary">Create Session</button>
+        </div>
+    </form>
+    <div class="pb-5 pt-5"></div>
+
+</div>
+
+<script src="{{ url_for('static', filename='javascript/upload/folder_modality.js') }}"></script>
+<script>
+    // Auto-load folder tree when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadFolderTree();
+    });
+</script>
+{% endblock %}

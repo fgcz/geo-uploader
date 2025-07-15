@@ -1,0 +1,49 @@
+<div class="container mt-5">
+    <!-- Handsontable Container -->
+    <div class="mt-5" id="study_handsontable"></div>
+
+    <!-- Save Data Button -->
+    <div class="row mb-4 mt-2">
+        <div class="col text-start">
+            <button class="btn btn-info save_metadata_btn" {% if not can_edit %} disabled {% endif %}>
+                Save Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Contributor and Supplementary File Buttons -->
+    <form method="post" id="metadata-study-resize-form">
+        {{ studyAddForm.hidden_tag() }}
+        <div class="row mb-4">
+            <!-- Contributor Buttons -->
+            <div class="col-6">
+                <h5>Contributors</h5>
+                <button type="button" class="btn btn-outline-info" {% if not
+                        can_edit %} disabled {% endif %}
+                        onclick="resizeStudyForm('add_contributor')">
+                    Add Contributor
+                </button>
+                <button type="button" class="btn btn-outline-warning" {% if not
+                        can_edit or contributor_disabled %} disabled {% endif %}
+                        onclick="resizeStudyForm('remove_contributor')">
+                    Remove Contributor
+                </button>
+            </div>
+
+            <!-- Supplementary File Buttons -->
+            <div class="col-6">
+                <h5>Supplementary Files</h5>
+                <button type="button" class="btn btn-outline-info" {% if
+                        not can_edit %} disabled {% endif %}
+                        onclick="resizeStudyForm('add_supplementary_file')">
+                    Add Supplementary File
+                </button>
+                <button type="button" class="btn btn-outline-warning" {%
+                        if not can_edit or supplementary_disabled %} disabled {% endif %}
+                        onclick="resizeStudyForm('remove_supplementary_file')">
+                    Remove Supplementary File
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

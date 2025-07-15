@@ -1,0 +1,367 @@
+{% set page_title = 'File Organizer' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <h1 class="text-center mb-4">
+        File Organizer
+    </h1>
+
+    <!-- Help Banner -->
+    <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+        <i class="bi bi-info-circle mr-2"></i>
+        <strong>Quick tip:</strong> Double-click any assigned file to move it back to unassigned, or use the arrow button (←).
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="row">
+        <!-- Sample Names Column -->
+        <div class="col-md-3">
+            <div class="bg-secondary text-white p-3 rounded-top text-center font-weight-bold">
+                <i class="bi bi-tags"></i> Sample Names
+            </div>
+            <div class="border border-secondary border-top-0 rounded-bottom p-3 bg-light" style="min-height: 400px;">
+                <button class="btn btn-outline-success w-100 mb-3" onclick="addNewSample()">
+                    <i class="bi bi-plus-lg"></i> Add New Sample
+                </button>
+                <div id="samples-list"></div>
+            </div>
+        </div>
+
+        <!-- Combined Files Column -->
+        <div class="col-md-6">
+            <div class="bg-secondary text-white p-3 rounded-top text-center font-weight-bold">
+                <i class="bi bi-files"></i> Sample Files
+            </div>
+            <div class="border border-secondary border-top-0 rounded-bottom p-3 bg-light" style="min-height: 400px;">
+                <div id="sample-files-container"></div>
+            </div>
+        </div>
+
+        <!-- Unassigned Files Dock -->
+        <div class="col-md-3">
+            <div class="unassigned-dock">
+                <div class="bg-warning text-dark p-3 rounded-top text-center font-weight-bold border-bottom border-warning">
+                    <i class="bi bi-box"></i> Unassigned Files
+                    <span id="unassigned-count" class="badge badge-danger ml-2">0</span>
+                </div>
+                <div class="dock-content" id="unassigned-files-container">
+                    <div class="dock-placeholder text-center text-warning py-5" id="dock-placeholder">
+                        <i class="bi bi-inbox mb-3" style="font-size: 2.5rem; opacity: 0.5;"></i>
+                        <p class="mb-2 font-weight-medium">Unassigned files will appear here</p>
+                        <small class="text-muted">Drag files from samples or drop new files here</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-4 justify-content-center">
+        <div class="col-auto">
+            <button class="btn btn-success btn-lg mr-2" onclick="saveConfiguration()">
+                <i class="bi bi-save"></i> Save
+            </button>
+{#            <button class="btn btn-secondary btn-lg ml-2" onclick="resetToDefaults()">#}
+{#                <i class="bi bi-arrow-counterclockwise"></i> Reset to Auto-grouping#}
+{#            </button>#}
+        </div>
+    </div>
+
+    <div style="margin-bottom: 5rem"></div>
+</div>
+
+<script>
+    const initialData = {{ data | tojson | safe }};
+</script>
+<script src="{{ url_for('static', filename='javascript/select_samples/file_organizer.js') }}"></script>
+
+<style>
+    /* Custom styles that can't be replaced with Bootstrap */
+
+    /* Sample Container Styles */
+    .sample-container {
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .sample-files-row {
+        display: flex;
+        min-height: 120px;
+    }
+
+    .sample-files-section {
+        flex: 1;
+        border: 2px dashed #dee2e6;
+        border-radius: 6px;
+        margin: 10px;
+        padding: 15px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .sample-files-section.drag-over {
+        border-color: #0d6efd;
+        background-color: #e7f3ff;
+    }
+
+    .sample-files-section h6 {
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 5px;
+    }
+
+    .raw-section h6 {
+        color: #0d6efd;
+    }
+
+    .processed-section h6 {
+        color: #198754;
+    }
+
+    /* File Item Styles */
+    .file-item {
+        background: #e9ecef;
+        border: 1px solid #adb5bd;
+        border-radius: 4px;
+        padding: 6px 10px;
+        margin: 3px;
+        cursor: move;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.2s ease;
+        user-select: none;
+        font-size: 0.85em;
+        min-width: 180px;
+        max-width: 100%;
+    }
+
+    .file-content {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .file-actions {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-left: 6px;
+    }
+
+    .move-to-unassigned-btn {
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+        opacity: 0.6;
+        font-size: 0.8em;
+    }
+
+    .move-to-unassigned-btn:hover {
+        background: #ffc107;
+        color: #212529;
+        opacity: 1;
+    }
+
+    .file-item:hover .move-to-unassigned-btn {
+        opacity: 1;
+    }
+
+    .file-item:hover {
+        background: #dee2e6;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .file-item.dragging {
+        opacity: 0.5;
+        transform: rotate(3deg);
+        z-index: 1000;
+    }
+
+    .file-item[draggable="true"] {
+        cursor: grab;
+    }
+
+    .file-item[draggable="true"]:active {
+        cursor: grabbing;
+    }
+
+    /* Sample Header Styles */
+    .sample-header {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+        padding: 12px 15px;
+        font-weight: 600;
+        border-radius: 6px 6px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .sample-header h5 {
+        margin: 0;
+        font-size: 1.1em;
+    }
+
+    .remove-sample {
+        color: #dc3545;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+
+    .remove-sample:hover {
+        background: #dc3545;
+        color: white;
+    }
+
+    /* Sample Names Container */
+    .sample-names-container {
+        border: 2px dashed #28a745;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        text-align: center;
+        min-height: 80px;
+    }
+
+    .sample-name-item {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        border-radius: 4px;
+        padding: 8px 12px;
+        margin: 4px;
+        display: inline-block;
+        font-weight: 500;
+        color: #0c5460;
+    }
+
+    .files-stats {
+        font-size: 0.8em;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    .empty-section {
+        text-align: center;
+        color: #6c757d;
+        font-style: italic;
+        padding: 20px;
+    }
+
+    /* Unassigned Files Dock - Custom positioning and behavior */
+    .unassigned-dock {
+        position: sticky;
+        top: 20px;
+        height: calc(100vh - 40px);
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dock-content {
+        flex: 1;
+        padding: 12px;
+        background: #fffbf0;
+        border-radius: 0 0 6px 6px;
+        overflow-y: auto;
+        border: 2px dashed #ffc107;
+        border-top: none;
+        transition: all 0.3s ease;
+        min-height: 0;
+    }
+
+    .dock-content.drag-over {
+        border-color: #ff6b35;
+        background-color: #fff5f5;
+        border-style: solid;
+    }
+
+    .dock-content.has-files {
+        border-style: solid;
+        border-color: #e0a800;
+    }
+
+    .dock-content.has-files .dock-placeholder {
+        display: none;
+    }
+
+    /* Unassigned file items - special styling for dock */
+    .unassigned-file-item {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+        display: block;
+        width: 100%;
+        margin: 2px 0;
+        min-width: unset;
+        max-width: 100%;
+        font-size: 0.8em;
+        padding: 6px 8px;
+        box-sizing: border-box;
+    }
+
+    .unassigned-file-item:hover {
+        background: #ffeaa7;
+        border-color: #ffc107;
+    }
+
+    .unassigned-file-item .file-content {
+        font-size: 0.85em;
+    }
+
+    #unassigned-count {
+        font-size: 0.8em;
+        padding: 2px 6px;
+        background: #dc3545;
+        color: white;
+        min-width: 20px;
+    }
+
+    /* Drop zone visual feedback */
+    .drop-zone {
+        min-height: 50px;
+        border: 2px dashed transparent;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .drop-zone.drag-over {
+        border-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.1);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .unassigned-dock {
+            position: relative;
+            height: 400px;
+            top: 0;
+        }
+
+        .file-item {
+            min-width: 160px;
+            font-size: 0.8em;
+        }
+    }
+</style>
+
+{% endblock %}

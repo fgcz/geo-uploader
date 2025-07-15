@@ -1,0 +1,11 @@
+name: gi_geo-uploader
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pandas
+  - pip
+  - git
+
+  - pip:
+      - -e . #reads pyproject.toml

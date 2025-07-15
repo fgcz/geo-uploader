@@ -1,0 +1,37 @@
+{% if current_user.is_authenticated %}
+<div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item d-flex align-items-center">
+            <span class="text-white px-2">
+               {{current_user.name}}
+            </span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+        </li>
+        <li>
+            <a class="nav-link" href="{{ url_for('main.profile_details') }}">Profile Details</a>
+        </li>
+        {% if current_user.is_admin() %}
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/users">View Users</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+{% else %}
+<div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="navbar-nav ml-auto">
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link" href="">Sign Up</a>-->
+<!--        </li>-->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.register') }}">Sign Up</a>
+        </li>
+    </ul>
+</div>
+{% endif %}

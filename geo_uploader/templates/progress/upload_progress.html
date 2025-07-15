@@ -1,0 +1,79 @@
+{% extends 'progress/_progress_base.html' %}
+
+{% set page_title = 'Upload Progress' %}
+
+{% block info_message %}Click on "Retrieve files from GEO" to check progress{% endblock %}
+
+{% block action_buttons %}
+<div class="row mt-5 justify-content-center"> <form action="{{ url_for('geo.retrieve_geo', id=session_id) }}" method="post" class="mr-2" onsubmit="showSpinner('Retrieving files from GEO')"> {{ retrieveGEOForm.hidden_tag() }} <button type="submit" class="btn btn-info">Retrieve files from GEO</button> </form>
+<form id="delete-geo-files-form" action="{{ url_for('geo.delete_from_geo', id=session_id) }}" method="post" class="mr-2">
+    {{ deleteGEOForm.hidden_tag() }}
+    <button type="button" class="btn btn-danger"
+            onclick="showConfirmationModal('Delete From GEO', 'Are you sure you want to delete all files uploaded to GEO?', 'Delete', 'delete-geo-files-form', true, 'Deleting all files from GEO')">
+        Delete GEO files
+    </button>
+</form>
+</div> {% endblock %}
+
+{% block left_column_content %}
+{% for sample in local_samples %}
+    <div class="card mb-3">
+        <ul class="list-group list-group-flush">
+
+            {% if sample.raw_file_paths is defined and sample.raw_file_paths %}
+                {% for raw_file in sample.raw_file_paths %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if raw_file.file_name not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}">
+                        <div>
+                            <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ raw_file.file_name }}
+                            </span>
+                        </div>
+                        {% if raw_file.size is defined %}
+                        <span class="badge badge-secondary badge-pill ml-2">{{ raw_file.size | filesizeformat }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Processed files -->
+            {% if sample.processed_file_paths is defined and sample.processed_file_paths %}
+                {% for proc_file in sample.processed_file_paths %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if proc_file.file_name not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}">
+                        <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ proc_file.file_name }}
+                        </span>
+                        {% if proc_file.size is defined %}
+                        <span class="badge badge-secondary badge-pill ml-2">{{ proc_file.size | filesizeformat }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+{% endfor %}
+{% endblock %}
+
+
+{% block right_column_title %}Files in GEO Server{% endblock %}
+
+{% block right_column_content %}
+{% if files_geo %}
+<ul class="list-group list-group-flush">
+    {% for file, size, _ in files_geo %}
+    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if file not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}"
+            style="overflow: hidden;"
+    >
+        <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1;">
+            {{ file }}
+        </span>
+        {% if size %}
+        <span class="badge badge-secondary badge-pill ml-2">{{ size | filesizeformat }}</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

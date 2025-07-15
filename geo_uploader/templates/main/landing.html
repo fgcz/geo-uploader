@@ -1,0 +1,22 @@
+{% set page_title = 'GEO-Uploader' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="mt-5">Welcome, upload something great!</h3>
+          <p></p>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-6 text-right">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-info">Log In</a>
+      </div>
+      <div class="col-lg-6 text-left">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-info">Sign Up</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

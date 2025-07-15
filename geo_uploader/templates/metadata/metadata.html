@@ -1,0 +1,163 @@
+{% set page_title = 'Metadata Upload' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    {% if blocked_by_employee and not can_release or blocked_by_admin and not can_release %}
+    <div class="alert alert-info text-center mt-4 d-flex justify-content-between align-items-center" role="alert">
+        {% if blocked_by_employee %}
+        <span>Metadata blocked by an employee, wait until block is released.</span>
+        {% elif blocked_by_admin %}
+        <span>Metadata blocked by another admin... check with user_id {{ permission_to }}</span>
+        {% endif %}
+        <form action="{{ url_for('metadata.notify_release', id=session_id) }}" method="post">
+            {{ notifyReleaseForm.hidden_tag() }}
+            <button type="submit" class="btn btn-outline-info">
+                Request release?
+            </button>
+        </form>
+
+    </div>
+    {% elif can_request_help %}
+    <div class="alert alert-info text-center mt-4 d-flex justify-content-between align-items-center" role="alert">
+        <span>In case you are wondering how to complete the metadata, do not hesitate to contact us.</span>
+        <form action="{{ url_for('metadata.notify_help', id=session_id) }}" method="post">
+            {{ notifyHelpForm.hidden_tag() }}
+            <button type="submit" class="btn btn-outline-info">
+                Ask for help?
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+
+        <!-- Back Button -->
+        <div class="mt-4 mb-3">
+            <button type="button" class="btn btn-outline-secondary px-4" onclick="window.history.back();">
+                &larr; Back
+            </button>
+        </div>
+
+        <h2 class="mx-auto mb-0"> Complete Metadata Sheet - {{ session_name }}</h2>
+
+        <!-- Invisible placeholder for symmetry -->
+        <div class="px-5"></div>
+
+    </div>
+
+
+    <!-- If the admin can block the metadata -->
+    {% if can_block %}
+    <form action="{{ url_for('metadata.request_permission', id=session_id) }}" method="post"
+          onsubmit="showSpinner('Blocking this metadata spreadsheet from other people..')">
+        {{ requestPermissionForm.hidden_tag() }}
+        <button type="submit" class="mt-5 btn btn-warning text-dark">
+            Block this metadata from the user, and enable editing
+        </button>
+    </form>
+
+    <!-- If the admin can release the block -->
+    {% elif can_release %}
+    <div class="alert alert-warning mt-4" role="alert">
+        <h4 class="alert-heading">Don't forget to release after use!</h4>
+        <p>Make sure to release the block on this metadata once you're done, to allow others to access and edit the
+            data.</p>
+    </div>
+
+    <form action="{{ url_for('metadata.release_block', id=session_id) }}" method="post"
+          onsubmit="showSpinner('Releasing the block on this metadata...')">
+        {{ releaseBlockForm.hidden_tag() }}
+        <button type="submit" class="mt-3 btn btn-outline-warning btn-lg btn-block">
+            <i class="bi bi-exclamation-triangle mr-2"></i> Release the block on this metadata
+        </button>
+    </form>
+    {% endif %}
+
+    <!-- Placeholder for saveMetadata form csrf token -->
+    <form id="metadataSave-csrf-form">
+        {{ metadataSaveForm.hidden_tag() }}
+    </form>
+
+    <!-- Bootstrap Tabs -->
+    <ul class="nav nav-tabs mt-5" id="metadataTab" role="tablist">
+        {% if pairedend_list_data | length == 1 %}
+        {% set tabs = [
+        {'id': 'study', 'label': 'Study Metadata'},
+        {'id': 'samples', 'label': 'Samples Metadata'},
+        {'id': 'protocol', 'label': 'Protocol Metadata'}
+        ] %}
+        {% else %}
+        {% set tabs = [
+        {'id': 'study', 'label': 'Study Metadata'},
+        {'id': 'samples', 'label': 'Samples Metadata'},
+        {'id': 'protocol', 'label': 'Protocol Metadata'},
+        {'id': 'pairedend', 'label': 'PairedEnd Metadata'}
+        ] %}
+        {% endif %}
+
+        {% for tab in tabs %}
+        <li class="nav-item">
+            <a class="nav-link text-secondary {% if loop.first %}active{% endif %}" id="{{ tab.id }}-tab"
+               data-toggle="tab" href="#{{ tab.id }}" role="tab"
+               aria-controls="{{ tab.id }}" {% if loop.first %}aria-selected="true" {% else %}aria-selected="false" {%
+               endif %}>
+                {{ tab.label }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content col-md-14" id="metadataTabContent">
+        {% for tab in tabs %}
+        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ tab.id }}" role="tabpanel"
+             aria-labelledby="{{ tab.id }}-tab">
+            <div class="status-message-{{ tab.id }} mt-3"></div>
+            {% include 'metadata/' + tab.id + '_handsontable.html' %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<script>
+// Page-specific data
+window.sessionId = {{ session_id }};
+window.metadataSaveUrl = "{{ url_for('metadata.metadata_save', id=session_id) }}";
+window.metadataResizeStudyUrl = "{{ url_for('metadata.resize_study', id=session_id) }}";
+window.metadataResizeProtocolUrl = "{{ url_for('metadata.resize_protocol', id=session_id) }}";
+
+// Data for tables
+const study_data = {{study_list_data | tojson}};
+const samples_data = {{samples_list_data | tojson}};
+const protocol_data = {{protocol_list_data | tojson}};
+const pairedend_data = {{pairedend_list_data | tojson}};
+
+// Dropdown samples tab data
+const dropdown_molecule = {{dropdown_molecule | tojson }};
+const dropdown_instrument = {{dropdown_instrument | tojson }};
+const dropdown_library = {{dropdown_library | tojson }};
+
+// Permission data
+const can_edit = {{ can_edit | tojson }};
+</script>
+
+<!-- Handsontable CSS -->
+<link rel='stylesheet' href="{{ url_for('static', filename='handsontable/handsontable.full.css') }}">
+<!-- Handsontable JS -->
+<script src="{{ url_for('static', filename='handsontable/handsontable.full.js') }}"></script>
+
+<!-- Metadata JavaScript modules -->
+<script src="{{ url_for('static', filename='javascript/metadata/core.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/metadata/validators.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/metadata/study.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/metadata/samples.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/metadata/protocol.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/metadata/pairedend.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/metadata/init.js') }}"></script>
+
+
+
+{% endblock %}

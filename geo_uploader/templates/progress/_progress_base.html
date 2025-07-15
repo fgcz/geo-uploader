@@ -1,0 +1,72 @@
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container">
+
+    <!-- Information box with appropriate action -->
+    {% if job_info.status == 'PENDING' or job_info.status == 'RUNNING' %}
+    <div class="alert alert-info text-center mt-4 d-flex justify-content-between align-items-center" role="alert">
+        <span>{% block info_message %}{% endblock %}</span>
+        {% block refresh_action %}{% endblock %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <!-- Back Button -->
+        <div class="mt-4 mb-3">
+            <button type="button" class="btn btn-outline-secondary px-4" onclick="window.history.back();">
+                &larr; Back
+            </button>
+        </div>
+
+        <h2 class="mx-auto mb-0">{{ name }}</h2>
+
+        <!-- Invisible placeholder for symmetry -->
+        <div class="px-5"></div>
+        <div></div>
+    </div>
+
+    <!-- Job Information Card -->
+    <div class="row mb-4">
+        <div class="col-md-10 offset-md-1">
+            <div class="card">
+                <div class="card-header {{ status_class }}">
+                    <h4 class="mb-0">Job Information</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Status:</strong> {{ job_info.status }}</li>
+                        <li class="list-group-item"><strong>ID:</strong> {{ job_info.job_id }}</li>
+                        <li class="list-group-item"><strong>Elapsed:</strong> {{ job_info.elapsed }}</li>
+                        <li class="list-group-item"><strong>Start Time:</strong> {{ job_info.start_time }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    {% block action_buttons %}{% endblock %}
+
+    <!-- File Comparison Section -->
+    <div class="row">
+        <!-- Left column: Files on Server-->
+        <div class="col-md-6">
+            <h2 class="mt-4 mb-3 text-center">Files on Server</h2>
+            <div class="overflow-auto" style="max-height: 600px;">
+                {% block left_column_content %}{% endblock %}
+            </div>
+        </div>
+
+        <!-- Right column: Configurable content -->
+        <div class="col-md-6">
+            <h2 class="mt-4 mb-3 text-center">{% block right_column_title %}{% endblock %}</h2>
+            <div class="overflow-auto" style="max-height: 600px;">
+                {% block right_column_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5"></div>
+</div>
+{% endblock %}

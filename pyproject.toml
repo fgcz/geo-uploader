@@ -1,0 +1,229 @@
+[build-system]
+requires = ["setuptools<81", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "geo_uploader"
+version = "0.1.0"
+description = "Genomic data upload application for GEO submissions"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [
+    {name = "Ronald Domi", email = "ronald.domi@uzh.ch"}
+]
+classifiers = [
+    "Private :: Do Not Upload to pip",
+    "Programming Language :: Python :: 3",
+
+]
+dependencies = [
+    # Web framework and extensions
+    "flask==3.0.3",
+    "Flask-SQLAlchemy==3.1.1",
+    "Flask-Mail==0.9.1",
+    "flask-session==0.8.0",
+    "Flask-Migrate==4.0.7",
+    "Flask-Caching==1.10.1",
+    "Flask-Login==0.6.3",
+    "Flask-WTF==1.2.1",
+    "Flask_Admin==1.6.1",
+
+    "email_validator==2.2.0",
+
+    # Database
+    "mysql-connector-python==9.2.0",
+
+    # File processing
+    "openpyxl==3.1.5",
+    "xlml==0.1.2",
+
+    # HTTP and external APIs
+    "requests==2.32.3",
+
+    # Configuration and utilities
+    "python-dotenv==1.0.1",
+    "PyYAML==6.0.2",
+
+    # Security scanning
+    "bandit>=1.7.0",
+
+    # Documentation
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme>=1.3.0",
+]
+
+[project.scripts]
+geo-uploader = "geo_uploader.cli:main"
+
+# Optional dependencies for different use cases
+[project.optional-dependencies]
+dev = [
+    # Code quality
+    "mypy==1.16.0",
+    "ruff>=0.12.0",
+
+    # Helpers for mypy
+    "types-openpyxl==3.1.5.20250602",
+    "types-wtforms==3.2.1.20250602",
+    "types-requests==2.32.4.20250611",
+    "types-PyYAML==6.0.12.20250516",
+    "types-FLASK-MIGRATE==4.1.0.20250112",
+    "pandas-stubs==2.2.3.250527",
+
+    # Development tools
+    "ipython==8.0.0",
+    "python-dotenv==1.0.1",  # For loading .env in development
+]
+
+# Configure setuptools
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["geo_uploader*"]
+
+# Black code formatting
+[tool.black]
+line-length = 88
+target-version = ['py313']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = [
+    "E203",  # whitespace before ':', conflicts with Black
+    "E501",  # Line too long (Black handles this)
+    "W503",  # line break before binary operator, conflicts with Black
+]
+
+# isort import sorting
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["geo_uploader"]
+known_third_party = ["flask", "pandas"]
+
+# MyPy type checking
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # Start lenient, tighten later
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+    "flask_wtf.*",
+    "flask_login.*",
+    "wtforms.*",
+    "openpyxl.*",
+    "flask_admin.*",
+    "flask_caching.*",
+    "flask_mail.*",
+    "flask_session.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+# Directories to exclude
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint]
+# Enable these rule groups
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort (import sorting)
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "N",    # pep8-naming
+    "SIM",  # flake8-simplify
+    "RUF",  # ruff-specific rules
+]
+
+# Rules to ignore
+ignore = [
+    "E501",   # Line too long (Black handles this)
+    "B008",   # Do not perform function calls in argument defaults
+    "B904",   # Allow raise without from inside except
+    "N806",   # Variable in function should be lowercase (conflicts with scientific naming)
+    "UP007",  # Use X | Y for type annotations (keep Union for Python 3.9 compatibility)
+]
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Rules that are allowed to be auto-fixed
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.per-file-ignores]
+"**/config.py" = [
+    "N802", # Allow uppercase fucntion names for Flask config properties
+]
+
+# CLI files can have longer functions
+"**/cli.py" = ["PLR0913"]  # Too many arguments to function call
+
+[tool.ruff.lint.isort]
+# Configure import sorting
+known-first-party = ["geo_uploader"]
+known-third-party = ["flask", "pandas", "sqlalchemy"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.mccabe]
+# Complexity threshold
+max-complexity = 10
+
+[tool.bandit]
+skips = [
+    "B101",  # assert_used
+    "B321",  # ftp call
+    "B402",  # import_ftplib
+    "B404",  # import_subprocess
+    "B603",  # subprocess_without_shell_equals_true
+]

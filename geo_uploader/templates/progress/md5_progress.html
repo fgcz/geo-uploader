@@ -1,0 +1,83 @@
+{% extends 'progress/_progress_base.html' %}
+
+{% set page_title = 'MD5 Progress' %}
+
+<!--HEADER MESSAGES-->
+{% block info_message %}Refresh the page to see the progress.{% endblock %}
+
+{% block refresh_action %}
+<button type="button" class="btn btn-outline-primary" onclick="window.location.reload();">
+    Refresh
+</button>
+{% endblock %}
+<!--HEADER MESSAGES-->
+
+
+{% block left_column_content %}
+{% for sample in local_samples %}
+    <div class="card mb-3">
+        <ul class="list-group list-group-flush">
+
+            {% if sample.raw_file_paths is defined and sample.raw_file_paths %}
+                {% for raw_file in sample.raw_file_paths %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if raw_file.file_name not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}">
+                        <div>
+                            <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ raw_file.file_name }}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Processed files -->
+            {% if sample.processed_file_paths is defined and sample.processed_file_paths %}
+                {% for proc_file in sample.processed_file_paths %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if proc_file.file_name not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}">
+                        <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ proc_file.file_name }}
+                        </span>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+{% endfor %}
+{% endblock %}
+
+{% block right_column_title %}Completed MD5 Files{% endblock %}
+
+{% block right_column_content %}
+{% for md5_sample in md5_samples %}
+    <div class="card mb-3">
+        <ul class="list-group list-group-flush">
+            {% if md5_sample.raw_file_paths is defined and md5_sample.raw_file_paths %}
+                {% for raw_file in md5_sample.raw_file_paths %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if raw_file.file_name not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}">
+                        <div>
+                            <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1;">
+                                {{ raw_file.file_name }}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Processed files -->
+            {% if md5_sample.processed_file_paths is defined and md5_sample.processed_file_paths %}
+                {% for proc_file in md5_sample.processed_file_paths %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center
+                        {% if proc_file.file_name not in discrepancies %} bg-info text-white {% else %} bg-light text-dark {% endif %}">
+                        <span class="file-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ proc_file.file_name }}
+                        </span>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+{% endfor %}
+{% endblock %}

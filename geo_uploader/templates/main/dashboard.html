@@ -1,0 +1,141 @@
+{% set page_title = 'Dashboard' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container mt-5">
+    <!-- Top row with Search Filters and New Session Button -->
+    <div class="row justify-content-between mb-3">
+        <div class="col-lg-8 col-md-6 col-sm-12">
+            <!-- Search Form -->
+            <form method="GET" action="{{ url_for('main.dashboard') }}" class="form-inline">
+                {{ searchForm.hidden_tag() }}
+
+                <div class="input-group mb-2 mr-sm-2">
+                    <input type="text" name="search_session" class="form-control" placeholder="Search sessions"
+                           value="{{ request.args.get('search_session', '') }}">
+                </div>
+                {% if is_admin %}
+                <div class="input-group mb-2 mr-sm-2">
+                    <input type="text" name="search_user" class="form-control" placeholder="Search users"
+                           value="{{ request.args.get('search_user', '') }}">
+
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-outline-primary mb-2">
+                    <i class="bi bi-search"></i> Filter
+                </button>
+                <p class="badge-info badge-pill ml-2 p-2 mb-2">Total Sessions: {{ sessions|length }}</p>
+            </form>
+        </div>
+        <!-- "New Session" Button on the Right -->
+        <div class="col-lg-4 col-md-6 col-sm-12 text-right">
+            <a class="btn btn-success mb-2" href="{{ url_for('upload.view_session_form') }}">
+                <i class="bi bi-plus"></i> New Session
+            </a>
+        </div>
+    </div>
+
+    <!-- Table of Upload Sessions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div style="max-height: 700px; overflow-y: auto;">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>My Upload Sessions</th>
+                        {% if is_admin %}
+                        <th>Owner</th>
+                        {% endif %}
+                        <th class="text-center">Actions</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if sessions|length > 0 %}
+                    {% for session in sessions|reverse %}
+                    <tr>
+                        <td>{{ session.session_title }}</td>
+                        {% if is_admin %}
+                        <td>{{ session.user.name }}</td>
+                        {% endif %}
+                        <td class="text-center">
+                            <div class="btn-group" role="group" aria-label="Task Actions">
+
+                                <!-- MD5sum Progress Button -->
+                                <a class="btn btn-outline-primary mr-1"
+                                   href="{{url_for('progress.progress_session_md5', id=session.id) }}"
+                                   data-toggle="tooltip" title="View MD5sum Progress">
+                                    <i class="bi bi-list-check"></i> View MD5sum Progress
+                                </a>
+                                <!-- Upload Progress Button -->
+                                <form action="{{url_for('geo.retrieve_geo', id=session.id) }}"
+                                      onsubmit="showSpinner('Retrieving files from GEO')" method="post" class="d-inline">
+                                    {{ viewUploadForm.hidden_tag() }}
+                                    <button type="submit" class="btn btn-outline-primary mr-1" data-toggle="tooltip"
+                                            data-placement="top" title="View Upload Job">
+                                        <i class="bi bi-upload"></i> Upload Progress
+                                    </button>
+                                </form>
+                                <!-- Complete Metadata Button -->
+                                {% if is_admin and session.users_id != current_user_id and session.metadata_permission_user == current_user_id %}
+                                <a class="btn btn-warning mr-1" href="{{url_for('metadata.edit_metadata', id=session.id)}}" onclick="showSpinner('Opening your metadata..')"
+                                   data-toggle="tooltip" title="Edit Metadata">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    Metadata blocked
+                                </a>
+                                {% else %}
+                                <a class="btn btn-info mr-1" href="{{url_for('metadata.edit_metadata', id=session.id)}}" onclick="showSpinner('Opening your metadata..')"
+                                   data-toggle="tooltip" title="Edit Metadata">
+                                    <i class="bi bi-pencil-fill"></i>
+                                    Complete Metadata
+                                </a>
+                                {% endif %}
+                                <!-- Download Metadata Button -->
+                                <form id="download-metadata-form-{{session.id}}" action="{{url_for('metadata.download_metadata', id=session.id) }}" method="post"
+                                      class="d-inline">
+                                    {{ downloadForm.hidden_tag() }}  <!-- CSRF token -->
+
+                                    {% if session.md5_job_finished %}
+                                    <button type="submit" class="btn btn-info" data-toggle="tooltip"
+                                            title="Download Metadata">
+                                        <i class="bi bi-download"></i> Download Metadata
+                                    </button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-outline-warning" data-toggle="tooltip"
+                                            title="Waiting for gathering job to finish"
+                                            onclick="showConfirmationModal('Download Metadata?', 'Please wait until the MD5sum process is completed...', 'Download', 'download-metadata-form-{{session.id}}', false)">
+                                            <i class="bi bi-download"></i> Download Metadata
+                                    </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <form id="delete-session-form-{{session.id}}" action="{{url_for('upload.delete_session', id=session.id) }}" method="post">
+                                {{ deleteSessionForm.hidden_tag() }}
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="showConfirmationModal('Delete Item', 'Are you sure you want to delete this item? GEO FTP files will also be deleted if there are not processed yet.', 'Delete files from GEO', 'delete-session-form-{{session.id}}', true, 'Deleting upload session...')">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td>No Upload Sessions Found</td>
+                        {% if is_admin %}
+                        <td></td>
+                        {% endif %}
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

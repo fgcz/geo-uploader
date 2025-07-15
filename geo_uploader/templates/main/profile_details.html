@@ -1,0 +1,142 @@
+{% set page_title = 'Profile Details' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container">
+    <!-- Header Section -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h2 class="text-primary mb-3">Greetings!</h2>
+            <p class="text-muted">Manage your profile details here</p>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-12 col-lg-8 offset-lg-2">
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <form onsubmit="showSpinner('Checking FTP credentials...')" method="POST" action="{{ url_for('main.profile_details') }}">
+                        {{ form.hidden_tag() }}
+
+                        <!-- Profile Details Section -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="text-primary mb-4">
+                                    <i class="fas fa-user-circle me-2"></i>Profile Details
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-12 {% if user and user.is_admin() %} col-md-12 {% endif %} mb-3">
+                                <label for="email" class="form-label fw-semibold">
+                                    <i class="fas fa-envelope me-1 text-muted"></i>Email Address*
+                                </label>
+                                {{ form.email(class_='form-control', placeholder='Enter your email address',
+                                    autofocus=True, value=user.email if user and user.email else '') }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ form.email.errors[0] }}
+                                    </div>
+                                {% endif %}
+                            </div>
+{#                            {% if user and user.is_admin() %}#}
+{#                            <div class="col-12 col-md-6 mb-3">#}
+{#                                <label for="full_name" class="form-label fw-semibold">#}
+{#                                    <i class="fas fa-id-card me-1 text-muted"></i>Full Name [Optional]#}
+{#                                </label>#}
+{#                                {{ form.full_name(class_='form-control', placeholder='Enter your full name',#}
+{#                                    value=user.full_name if user and user.full_name else '') }}#}
+{#                                {% if form.full_name.errors %}#}
+{#                                    <div class="text-danger mt-1 small">#}
+{#                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ form.full_name.errors[0] }}#}
+{#                                    </div>#}
+{#                                {% endif %}#}
+{#                                <small class="text-muted">This name will be visible to users seeking assistance</small>#}
+{#                            </div>#}
+{#                            {% endif %}#}
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="remote_folder" class="form-label fw-semibold">
+                                    <i class="fas fa-folder me-1 text-muted"></i>Remote Folder*
+                                </label>
+                                {{ form.remote_folder(class_='form-control', placeholder='Enter remote folder path',
+                                    value=user.remote_folder if user.remote_folder else '') }}
+                                {% if form.remote_folder.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ form.remote_folder.errors[0] }}
+                                    </div>
+                                {% endif %}
+                                <small class="text-muted">
+                                    Need help? Check the
+                                    <a target="_blank" href="https://fgcz-intranet.uzh.ch/tiki-index.php?page=web.seq.geo_upload" class="text-decoration-none">
+                                        <i class="fas fa-external-link-alt me-1"></i>FGCZ wiki
+                                    </a>
+                                </small>
+                            </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <label for="remote_password" class="form-label fw-semibold">
+                                    <i class="fas fa-key me-1 text-muted"></i>Remote Password*
+                                </label>
+                                {{ form.remote_password(class_='form-control', placeholder='Enter remote password',
+                                    value=user.remote_password if user.remote_password else 'inAlwokhodAbnib5') }}
+                                {% if form.remote_password.errors %}
+                                    <div class="text-danger mt-1 small">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ form.remote_password.errors[0] }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <hr class="my-4">
+
+{#                        {% if user and user.is_admin() %}#}
+{#                        <!-- Preferences Section -->#}
+{#                        <div class="row">#}
+{#                            <div class="col-12">#}
+{#                                <h4 class="text-primary mb-4">#}
+{#                                    <i class="fas fa-cog me-2"></i>Collaboration Preferences#}
+{#                                </h4>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                        <div class="row">#}
+{#                            <div class="col-12">#}
+{#                                <div class="card bg-light border-0 p-3 mb-4">#}
+{#                                    <div class="form-check">#}
+{#                                        {{ form.show_email(class_='form-check-input', id='show_email-checkbox',#}
+{#                                            checked=user.preferences_email_list if user else False) }}#}
+{#                                        <label class="form-check-label fw-semibold" for="show_email-checkbox">#}
+{#                                            <i class="fas fa-hands-helping me-2 text-success"></i>#}
+{#                                            {{ form.show_email.label.text }}#}
+{#                                        </label>#}
+{#                                        <div class="mt-2">#}
+{#                                            <small class="text-muted">#}
+{#                                                By participating, you'll be available to help other users with completing their metadata / unarchiving orders.#}
+{#                                            </small>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        {% endif %}#}
+
+                        <!-- Submit Button -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-grid">
+                                    {{ form.submit(class_="btn btn-primary btn-lg") }}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

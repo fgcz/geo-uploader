@@ -1,0 +1,70 @@
+{% set page_title = 'Register' %}
+
+{% extends 'layouts/base.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="text-center mb-4">{{ page_title }}</h3>
+                    <form method="POST" action="{{ url_for('auth.register') }}">
+                        {{ form.hidden_tag() }}
+
+                        <div class="form-group mb-3">
+                            <label for="username">Username</label>
+                            {{ form.username(class_='form-control w-100', placeholder='Enter your username', autofocus=True) }}
+                            {% if form.username.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.username.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="email">Email</label>
+                            {{ form.email(class_='form-control w-100', placeholder='Enter your email address') }}
+                            {% if form.email.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.email.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="password">Password</label>
+                            {{ form.password(class_='form-control w-100', placeholder='Enter your password') }}
+                            {% if form.password.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.password.errors[0] }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text text-muted">
+                                Password must be at least 6 characters long.
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="confirm_password">Confirm Password</label>
+                            {{ form.confirm_password(class_='form-control w-100', placeholder='Confirm your password') }}
+                            {% if form.confirm_password.errors %}
+                                <div class="text-danger mt-1">
+                                    {{ form.confirm_password.errors[0] }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Register</button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-2">Already have an account?</p>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary w-100">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
