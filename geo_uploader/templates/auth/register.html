@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container">
     <div class="row mt-5">
-        <div class="col-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 offset-lg-1">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h3 class="text-center mb-4">{{ page_title }}</h3>
@@ -61,6 +61,28 @@
                     <div class="text-center">
                         <p class="mb-2">Already have an account?</p>
                         <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary w-100">Login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 offset-lg-1 mt-4 mt-md-0">
+            <div class="card shadow-sm border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Important Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning mb-3">
+                        <strong>Email Configuration Required</strong>
+                        <p class="mb-0 mt-1">New registrations will not be possible without setting the mail configuration for email validation in the <code>.env</code> file.</p>
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+                        <strong>Account Purpose</strong>
+                        <p class="mb-0 mt-1">This account is just a way to distinguish between users. It has nothing to do with the GEO repository account.</p>
                     </div>
                 </div>
             </div>

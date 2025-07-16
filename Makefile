@@ -25,14 +25,11 @@ setup-config:
 	@echo ""
 	@echo "🔧 NEXT STEP: Edit .env file with your email configuration:"
 	@echo "   nano .env"
-	@echo ""
-	@echo "📧 Required settings:"
-	@echo "   MAIL_USERNAME=your-email@gmail.com"
-	@echo "   MAIL_APP_PASSWORD=your-app-password"
+	@echo "   nano .flaskenv"
 	@echo ""
 	@echo "💡 For Gmail: Generate App Password at https://myaccount.google.com/apppasswords"
 	@echo ""
-	@echo "⏭️  After editing .env, run: make setup-db"
+	@echo "⏭️  After editing .env .flaskenv, run: make setup-db"
 
 
 setup-db:

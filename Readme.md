@@ -36,9 +36,9 @@ GEO-Uploader simplifies the process of uploading bulk RNA and single-cell genomi
 # GeoUploader/
 # ├── geo-uploader/          # This repository
 # └── geo_uploader_data/     # Auto-created
-git clone https://gitlab.bfabric.org/Genomics/geo-uploader.git
+mkdir GeoUploader && cd GeoUploader
+git clone https://github.com/fgcz/geo-uploader.git
 cd geo-uploader
-git checkout -f public
 
 # Install environment and dependencies
 make setup-env
@@ -47,14 +47,15 @@ make setup-env
 make setup-config
 ```
 
-Update of the following configuration files
+### Update of the following configuration files
 - `MAIL_USERNAME` (.env)
 - `MAIL_APP_PASSWORD` (.env)
 - `BASE_FOLDER_SELECTION` (.flaskenv)
 
 ```bash
-nano .env      
+nano .env 
 nano .flaskenv 
+# vim, notepad are other good options
 
 # Initialize database
 make setup-db
@@ -67,7 +68,7 @@ make setup-db
 conda activate gi_geo-uploader
 flask status
 flask start-prod
-# Click on the links given or the terminal to access the server
+# Click on the links given from the terminal to access the server
 # http://127.0.0.1:8000
 
 
@@ -82,9 +83,8 @@ flask start-prod
 # └── geo_uploader_data/     # Auto-created
 
 mkdir GeoUploader && cd GeoUploader
-git clone https://gitlab.bfabric.org/Genomics/geo-uploader.git 
+git clone https://github.com/fgcz/geo-uploader.git
 cd geo-uploader
-git checkout -f public
 
 # Create the conda environment from environment.yml
 conda env create -f environment.yml || echo "Environment might already exist"
@@ -97,7 +97,7 @@ pip install -e .
 cp .env.example .env
 ```
 
-Update of the following configuration files
+### Update of the following configuration files
 - `MAIL_USERNAME` (.env)
 - `MAIL_APP_PASSWORD` (.env)
 - `BASE_FOLDER_SELECTION` (.flaskenv)
@@ -107,6 +107,7 @@ Update of the following configuration files
 # quit nano with Ctrl+X
 nano .env  # Set MAIL_USERNAME, MAIL_APP_PASSWORD
 nano .flaskenv # SET BASE_FOLDER_SELECTION
+# vim, notepad are other options
 
 # Initialize database
 flask init-db
@@ -117,13 +118,21 @@ flask init-db
 
 # Start development server
 flask run -p 8000
-# Click on the links given or the terminal to access the server
+# Click on the links given from the terminal to access the server
 # http://127.0.0.1:8000
 
 ```
 
-### Before First Use
-Complete GEO registration following the [FGCZ GEO Upload Guide](https://fgcz-intranet.uzh.ch/tiki-index.php?page=web.seq.geo_upload).
+### Before First Use - Understanding the Software
+- Complete GEO registration following the [GEO Upload Guide](https://github.com/fgcz/geo-uploader/blob/main/documentation/GEO_instructions.md).
+
+- For the best experience creating a new session, gather all the files into one folder, and files corresponding to the same sample should have the same prefix. It is only possible to upload files directly under the selected folder, so no multi-folder file selection is possible.
+
+- There are 3 different accounts to be set up for this tool, do not confuse them.
+  - GEO repository personal folder + password
+  - GEO Uploader account login - only serves for distinguishing users
+  - (Optional) MAIL configuration - for being able to register new users and receiving email notifications
+
 
 ### Example Upload
 Once the server is up and running, and you can access it, you can try a mock upload.  
@@ -158,6 +167,12 @@ Once the server is up and running, and you can access it, you can try a mock upl
 - `lsof` error on Windows when running `flask start-prod` or `flask status`
   - lsof is a command only for Mac/Linux, in a Windows computer use the alternative commands to start the server
   - `flask run`
+
+- Metadata.xlsx sheet template is deprecated, not accepted by GEO anymore.
+  - Because we save a local copy of the Metadata.xlsx, whenever GEO updates their expectations, a by hand update of the file also is needed.
+  - You need to update the `/geo-uploader/geo_uploader/utils/metadata_seq_template.xlsx` file with the new version
+  - Also the code needs to be changed to reflect the new structure, whenever this happens, I suggest pulling the latest repository commit
+  - We will keep the most recent metadata version up to date here so you don't have to.
 
 ## 🏗️ Architecture Overview
 

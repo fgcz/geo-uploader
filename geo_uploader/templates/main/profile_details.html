@@ -40,22 +40,13 @@
                                         <i class="fas fa-exclamation-triangle me-1"></i>{{ form.email.errors[0] }}
                                     </div>
                                 {% endif %}
+
+                                <!-- Email Info Box -->
+                                <div class="alert alert-info mt-2 mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Email Notifications:</strong> The email will only be useful if you want to receive notifications when your uploads have finished.
+                                </div>
                             </div>
-{#                            {% if user and user.is_admin() %}#}
-{#                            <div class="col-12 col-md-6 mb-3">#}
-{#                                <label for="full_name" class="form-label fw-semibold">#}
-{#                                    <i class="fas fa-id-card me-1 text-muted"></i>Full Name [Optional]#}
-{#                                </label>#}
-{#                                {{ form.full_name(class_='form-control', placeholder='Enter your full name',#}
-{#                                    value=user.full_name if user and user.full_name else '') }}#}
-{#                                {% if form.full_name.errors %}#}
-{#                                    <div class="text-danger mt-1 small">#}
-{#                                        <i class="fas fa-exclamation-triangle me-1"></i>{{ form.full_name.errors[0] }}#}
-{#                                    </div>#}
-{#                                {% endif %}#}
-{#                                <small class="text-muted">This name will be visible to users seeking assistance</small>#}
-{#                            </div>#}
-{#                            {% endif %}#}
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 mb-3">
@@ -71,8 +62,8 @@
                                 {% endif %}
                                 <small class="text-muted">
                                     Need help? Check the
-                                    <a target="_blank" href="https://fgcz-intranet.uzh.ch/tiki-index.php?page=web.seq.geo_upload" class="text-decoration-none">
-                                        <i class="fas fa-external-link-alt me-1"></i>FGCZ wiki
+                                    <a target="_blank" href="https://github.com/fgcz/geo-uploader/blob/main/documentation/GEO_instructions.md" class="text-decoration-none">
+                                        <i class="fas fa-external-link-alt me-1"></i>wiki
                                     </a>
                                 </small>
                             </div>

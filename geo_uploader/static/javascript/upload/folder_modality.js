@@ -29,7 +29,7 @@ function loadFolderTree(){
         .catch(error => {
             console.error('Error fetching tree data:', error);
             document.getElementById('loading_indicator').style.display = 'none';
-            alert('Error loading folder structure. Did you enter a readable directory in the .flaskenv file?');
+            alert('Error loading folder structure. Please update .flaskenv again with a readable directory');
         })
 }
 
