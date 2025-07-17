@@ -432,8 +432,10 @@ class SessionUploadService:
         self.excel_service.copy_new_session_metadata(session_folder_path)
 
         # Resize and populate spreadsheet
+        max_read_length = max([len(sample.raw_file_paths) for sample in samples])
+        max_processed_length = max([len(sample.processed_file_paths) for sample in samples])
         protocols_displacement = resize_samples(
-            excel_path, is_single_cell, len(samples), 12
+            excel_path, len(samples), max_read_length, max_processed_length
         )
         self.logger.debug(f"resized: {protocols_displacement}")
 
@@ -441,7 +443,7 @@ class SessionUploadService:
             session_title,
         )
         self.excel_service.autocomplete_metadata(
-            samples, protocols_displacement, sheet, is_single_cell
+            samples, protocols_displacement, sheet
         )
         self.excel_service.prepare_close_metadata(wb, session_title)
         self.logger.debug("autocompleted")

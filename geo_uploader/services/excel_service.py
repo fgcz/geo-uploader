@@ -76,7 +76,6 @@ class ExcelService:
         samples: list[SampleMetadata],
         protocols_displacement: int,
         sheet: Worksheet,
-        is_singlecell: bool,
     ):
         """
         Complete metadata for each sample in the sheet.
@@ -85,7 +84,6 @@ class ExcelService:
             samples: List of sample metadata objects
             protocols_displacement: Displacement for protocols section
             sheet: The Worksheet to update
-            is_singlecell: Whether this is single cell data (as opposed to bulk)
         """
         cls._autocomplete_bulk_metadata(samples, sheet)
         cls._autocomplete_bulk_pairedend_section(
@@ -139,7 +137,8 @@ class ExcelService:
 
             # Map the raw files to their respective columns
             for i, file_info in enumerate(sample.raw_file_paths):
-                raw_column_number = SAMPLE_NAME_TO_COLUMNS["raw_file_1"] + i
+                processed_displacement = max(len(sample.processed_file_paths) - 2, 0)
+                raw_column_number = SAMPLE_NAME_TO_COLUMNS["raw_file_1"] + i + processed_displacement
                 sheet.cell(sample_row, raw_column_number).value = file_info.file_name
 
             # Handle processed files
@@ -160,11 +159,10 @@ class ExcelService:
         processed_files = sample.processed_file_paths
 
         # Map the processed files to their respective columns
-        for i, file_info in enumerate(processed_files, start=1):
-            column_name = f"processed_file_{i}"
-            if column_name in SAMPLE_NAME_TO_COLUMNS:
-                column = SAMPLE_NAME_TO_COLUMNS[column_name]
-                sheet.cell(row, column).value = file_info.file_name
+        for i, file_info in enumerate(processed_files):
+            column_index = SAMPLE_NAME_TO_COLUMNS["processed_file_1"] + i
+            sheet.cell(row, column_index).value = file_info.file_name
+
 
     @classmethod
     def _set_basic_sample_metadata(
@@ -377,16 +375,16 @@ def save_protocol_metadata(protocol, protocol_displacement, sheet):
         sheet.cell(row, 2).value = protocol[row - new_protocol_startrow][1]
 
 
-def resize_samples(open_path, is_singlecell, sample_length, raw_length):
+def resize_samples(open_path, sample_length, max_read_length, max_processed_length):
     """
     Add rows in case the sample_length overlaps with the other sections\n
-    Add columns in case of SingleCell: 1 column for processed, raw_length - 4(already by default) for raw
+    Add columns in case max_processed_length > 2, and max_read_length > 4\n
     """
 
     reapply_hidden_dropdown(open_path, "Metadata")
 
     # remove the paired/single-end in case of bulk
-    samples_length = sample_length - 1 if not is_singlecell else sample_length
+    samples_length = sample_length
 
     protocols_displacement = 0
     # we add rows whether it is single cell or bulk
@@ -407,31 +405,29 @@ def resize_samples(open_path, is_singlecell, sample_length, raw_length):
         )
 
         protocols_displacement = rows_extra
+    if max_processed_length > 2:
+        processed_columns_to_insert = max_processed_length - 2
+        for _i in range(processed_columns_to_insert):
+            insert_column(
+                open_path,
+                "Metadata",
+                metadata_samples_column_raw,
+                header_line=metadata_samples_startrow,
+                file_column=True,
+            )
 
-    if is_singlecell:
-        # only single cell needs to add columns to samples
-
-        # insert 1 processed column always
-        # in case we are uploading only raw files, we would have one extra column, but whatever
-        insert_column(
-            open_path,
-            "Metadata",
-            metadata_samples_column_raw,
-            header_line=metadata_samples_startrow,
-            file_column=True,
-        )
-
-        # insert additional raw columns
-        if raw_length > 4:
-            raw_columns_to_insert = raw_length - 4
-            for _i in range(raw_columns_to_insert):
-                insert_column(
-                    open_path,
-                    "Metadata",
-                    metadata_samples_column_raw + 3,
-                    header_line=metadata_samples_startrow,
-                    file_column=True,
-                )
+    # insert additional raw columns
+    if max_read_length > 4:
+        raw_columns_to_insert = max_read_length - 4
+        processed_columns_to_insert = max(max_processed_length - 2, 0)
+        for _i in range(raw_columns_to_insert):
+            insert_column(
+                open_path,
+                "Metadata",
+                metadata_samples_column_raw + 2 + processed_columns_to_insert,
+                header_line=metadata_samples_startrow,
+                file_column=True,
+            )
 
     return protocols_displacement
 
