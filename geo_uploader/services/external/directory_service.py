@@ -180,7 +180,7 @@ class DirectoryService:
             items = list(directory.iterdir())
 
             # Limit items per directory to prevent performance issues
-            max_items = 100  # Could be configurable
+            max_items = 200  # Could be configurable
             if len(items) > max_items:
                 logger.warning(
                     f"Directory {directory} has {len(items)} items, limiting to {max_items}"

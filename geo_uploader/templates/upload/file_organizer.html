@@ -246,9 +246,18 @@
         border-radius: 4px;
         padding: 8px 12px;
         margin: 4px;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
         font-weight: 500;
         color: #0c5460;
+        min-width: 200px;
+        max-width: 100%;
+    }
+
+    .sample-name-content {
+        flex: 1;
+        min-width: 0;
     }
 
     .files-stats {
@@ -257,11 +266,28 @@
         margin-top: 5px;
     }
 
-    .empty-section {
-        text-align: center;
-        color: #6c757d;
-        font-style: italic;
-        padding: 20px;
+    .remove-sample-name {
+        color: #dc3545;
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+        opacity: 0.6;
+        font-size: 0.8em;
+        margin-left: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .remove-sample-name:hover {
+        background: #dc3545;
+        color: white;
+        opacity: 1;
+    }
+
+    .sample-name-item:hover .remove-sample-name {
+        opacity: 1;
     }
 
     /* Unassigned Files Dock - Custom positioning and behavior */

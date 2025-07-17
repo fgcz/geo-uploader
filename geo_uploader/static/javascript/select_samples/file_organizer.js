@@ -98,7 +98,6 @@ function createUnassignedFileElement(filename) {
     setupDragEvents(fileDiv);
     return fileDiv;
 }
-
 function renderSampleNamesList() {
     const samplesContainer = document.getElementById('samples-list');
 
@@ -119,10 +118,15 @@ function renderSampleNamesList() {
             const processedCount = samplesData[sampleName].processed ? samplesData[sampleName].processed.length : 0;
 
             nameItem.innerHTML = `
-                <strong>${sampleName}</strong>
-                <div class="files-stats">
-                    Raw: ${rawCount} | Processed: ${processedCount}
+                <div class="sample-name-content">
+                    <strong>${sampleName}</strong>
+                    <div class="files-stats">
+                        Raw: ${rawCount} | Processed: ${processedCount}
+                    </div>
                 </div>
+                <span class="remove-sample-name" onclick="removeSample('${sampleName}')" title="Remove Sample">
+                    <i class="bi bi-x-lg"></i>
+                </span>
             `;
 
             namesContainer.appendChild(nameItem);
@@ -384,22 +388,22 @@ function addNewSample() {
 }
 
 function removeSample(sampleName) {
-    if (confirm(`Remove sample "${sampleName}"? All files will be moved to unassigned.`)) {
-        // Move all files to unassigned before removing sample
-        if (samplesData[sampleName].raw) {
-            unassignedFiles.push(...samplesData[sampleName].raw);
-        }
-        if (samplesData[sampleName].processed) {
-            unassignedFiles.push(...samplesData[sampleName].processed);
-        }
-
-        // Remove duplicates from unassigned files
-        unassignedFiles = [...new Set(unassignedFiles)];
-
-        delete samplesData[sampleName];
-        renderSamples();
-        renderUnassignedFiles();
+    // if (confirm(`Remove sample "${sampleName}"? All files will be moved to unassigned.`)) {
+    // Move all files to unassigned before removing sample
+    if (samplesData[sampleName].raw) {
+        unassignedFiles.push(...samplesData[sampleName].raw);
     }
+    if (samplesData[sampleName].processed) {
+        unassignedFiles.push(...samplesData[sampleName].processed);
+    }
+
+    // Remove duplicates from unassigned files
+    unassignedFiles = [...new Set(unassignedFiles)];
+
+    delete samplesData[sampleName];
+    renderSamples();
+    renderUnassignedFiles();
+
 }
 
 function saveConfiguration() {

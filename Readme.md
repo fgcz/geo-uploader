@@ -160,7 +160,9 @@ Once the server is up and running, and you can access it, you can try a mock upl
 - Cannot find the folder you are looking for on a new submission
   - Update your BASE_PATH in .flaskenv, everything is shown relative to this
   - No need to re-install, just Ctrl+C and restart the server again
-
+  - If the path is correct, and you still can't see the folder, I suspect it has to do with the number of folders in the root.
+  - In the code there is the line `max_items = 200`, if the folder has more than 100 items, it will not show the other files/directories
+    - You are free to change this line in the `directory_service.py` file
 - Cannot install using Makefile
   - Use the alternative version without Makefile for Windows (documented above)
 
