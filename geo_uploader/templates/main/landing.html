@@ -4,31 +4,71 @@
 
 {% block body %}
   <div class="container">
+    <!-- Hero Section -->
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="mt-5">Welcome, upload something great!</h2>
+        <h2 class="mt-5">Welcome to GEO-Uploader</h2>
+        <p class="lead text-muted">Streamline your genomic data submission to NCBI GEO</p>
       </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Action Buttons Section -->
+    <div class="row mt-4 mb-5">
+      <div class="col-lg-6 text-right">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-info">
+          <i class="bi bi-box-arrow-in-right"></i> Log In
+        </a>
+      </div>
+      <div class="col-lg-6 text-left">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-outline-info">
+          <i class="bi bi-person-plus"></i> Sign Up
+        </a>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-4">
+
+    <!-- Default Accounts Section -->
+    <div class="row">
       <div class="col-lg-12">
-        <div class="card mx-auto" style="max-width: 600px;">
-          <div class="card-header bg-light">
-            <h5 class="mb-0 text-center">Default Accounts for Personal Use</h5>
+        <div class="card mx-auto bg-light" style="max-width: 600px;">
+          <div class="card-header bg-info">
+            <h5 class="mb-0 text-center">
+              <i class="bi bi-person-check"></i> Default Accounts for Personal Use
+            </h5>
           </div>
           <div class="card-body">
             <div class="row text-center">
-              <div class="col-md-4">
-                <strong>Admin</strong><br>
-                <small class="text-muted">Username: Admin<br>Password: password</small>
+              <div class="col-md-4 mb-3">
+                <div class="card border-danger">
+                  <div class="card-body">
+                    <strong class="text-danger">
+                      <i class="bi bi-gear"></i> Admin
+                    </strong><br>
+                    <small class="text-muted">Username: Admin<br>Password: password</small>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-4">
-                <strong>User1</strong><br>
-                <small class="text-muted">Username: User1<br>Password: password</small>
+              <div class="col-md-4 mb-3">
+                <div class="card border-primary">
+                  <div class="card-body">
+                    <strong class="text-primary">
+                      <i class="bi bi-person"></i> User1
+                    </strong><br>
+                    <small class="text-muted">Username: User1<br>Password: password</small>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-4">
-                <strong>User2</strong><br>
-                <small class="text-muted">Username: User2<br>Password: password</small>
+              <div class="col-md-4 mb-3">
+                <div class="card border-success">
+                  <div class="card-body">
+                    <strong class="text-success">
+                      <i class="bi bi-person"></i> User2
+                    </strong><br>
+                    <small class="text-muted">Username: User2<br>Password: password</small>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -36,13 +76,123 @@
       </div>
     </div>
 
-    <div class="row mt-4">
-      <div class="col-lg-6 text-right">
-        <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-info">Log In</a>
-      </div>
-      <div class="col-lg-6 text-left">
-        <a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-info">Sign Up</a>
+    <!-- Divider -->
+    <hr class="my-4">
+
+    <!-- How to Use Section -->
+    <div class="row">
+      <div class="col-lg-12">
+        <h3 class="text-center mb-4">How to Use This Application</h3>
+        <p class="text-center text-muted mb-5">Follow these 6 steps to upload your data to NCBI GEO</p>
       </div>
     </div>
+
+    <!-- Steps Section -->
+    <div class="row mb-5">
+      <!-- Step 1 -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-start">
+              <span class="badge badge-info badge-pill mr-3 mt-1" style="font-size: 1rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">1</span>
+              <div>
+                <h5 class="card-title">Get your GEO account</h5>
+                <p class="card-text">Create an account at NCBI GEO to start submitting your genomic data.</p>
+                <a href="https://www.ncbi.nlm.nih.gov/geo/info/seq.html" target="_blank" class="btn btn-sm btn-outline-info">
+                  <i class="bi bi-box-arrow-up-right"></i> Visit NCBI GEO
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-start">
+              <span class="badge badge-info badge-pill mr-3 mt-1" style="font-size: 1rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">2</span>
+              <div>
+                <h5 class="card-title">Get your GEO FTP credentials</h5>
+                <p class="card-text">Obtain the necessary FTP credentials to enable secure data transfer.</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a href="https://github.com/fgcz/geo-uploader/blob/main/documentation/GEO_instructions.md" target="_blank" class="btn btn-sm btn-outline-info mb-2">
+                    <i class="bi bi-box-arrow-up-right"></i> FGCZ steps documentation
+                  </a>
+                  <a href="https://www.ncbi.nlm.nih.gov/geo/info/submissionftp.html" target="_blank" class="btn btn-sm btn-outline-info mb-2">
+                    <i class="bi bi-box-arrow-up-right"></i> NCBI FTP page
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-start">
+              <span class="badge badge-info badge-pill mr-3 mt-1" style="font-size: 1rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">3</span>
+              <div>
+                <h5 class="card-title">Start a new GEO-uploader session</h5>
+                <p class="card-text">Log in to the application and create a new upload session for your data.</p>
+                <small class="text-muted">
+                  <i class="bi bi-info-circle"></i> Use the login credentials above to get started
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-start">
+              <span class="badge badge-info badge-pill mr-3 mt-1" style="font-size: 1rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">4</span>
+              <div>
+                <h5 class="card-title">Select the files</h5>
+                <p class="card-text">Choose and upload your genomic data files from your local system.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-start">
+              <span class="badge badge-info badge-pill mr-3 mt-1" style="font-size: 1rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">5</span>
+              <div>
+                <h5 class="card-title">Complete the metadata</h5>
+                <p class="card-text">Fill in the required metadata information to describe your dataset.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="col-md-6 mb-4">
+        <div class="card h-100 border-info">
+          <div class="card-body">
+            <div class="d-flex align-items-start">
+              <span class="badge badge-info badge-pill mr-3 mt-1" style="font-size: 1rem; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">6</span>
+              <div>
+                <h5 class="card-title">Finish at GEO</h5>
+                <p class="card-text">Complete the submission process on the NCBI GEO platform.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 {% endblock %}

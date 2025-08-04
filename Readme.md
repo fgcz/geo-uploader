@@ -149,13 +149,15 @@ Once the server is up and running, and you can access it, you can try a mock upl
   - For more debugging power, check the following paths
     - `geo_uploader_data/jobs/jobs.json`
     - `geo_uploader_data/uploads/UPLOAD_TITLE/jobs/upload_md5.out`
-    
+
 
 - Verification email not sent on new user registration
   - MAIL_USERNAME, MAIL_APP_PASSWORD are not set correctly in .env
 
 - Google Account doesn't support AppPasswords
-  - No immediate solution, try with different accounts or debug your google account
+  - Google doesn't support app passwords when the two factor authentication is not activated
+  - Either turn on the two factor authentication, or skip the notifications
+  - When skipping the notifications, new accounts cannot be registered, on of the default accounts has to be used for uploads.
 
 - Cannot find the folder you are looking for on a new submission
   - Update your BASE_PATH in .flaskenv, everything is shown relative to this
