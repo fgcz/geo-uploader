@@ -3,7 +3,7 @@ FLASK_DEBUG=1
 FLASK_APP=manage.py
 
 SERVER_HOST=localhost
-SERVER_PORT=8090
+SERVER_PORT=8000
 
 # =============================================================================
 # COMPLETE THIS
@@ -15,7 +15,7 @@ MAX_FOLDER_SELECTION_DEPTH=10
 # This is the base path from where the file selector lets you choose your raw data
 # If you mistype this root path, or want to change it, just update this path
 # and relaunch the server, no need re-installing anything
-BASE_FOLDER_SELECTION=/Users/ronald/Desktop
+BASE_FOLDER_SELECTION=/Users/user/Desktop
 
 # =============================================================================
 # DATA DIRECTORIES (OPTIONAL)
