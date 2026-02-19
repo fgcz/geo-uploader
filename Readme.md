@@ -6,6 +6,12 @@ A Flask web application for streamlined genomic data uploads to the NCBI GEO rep
 https://geo-uploader.fgcz.uzh.ch/   
 Username: `Visitor`   
 Password: `GeoUploader`  
+
+## Setup Video explanation
+[Click here to watch the setup video](/videos/Setup.mp4)
+
+## Core Facility integration
+[Click here to watch the integration video](/videos/integration.mp4)
   
 ## Table of Contents
 
