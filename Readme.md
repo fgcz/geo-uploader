@@ -6,6 +6,12 @@ A Flask web application for streamlined genomic data uploads to the NCBI GEO rep
 https://geo-uploader.fgcz.uzh.ch/   
 Username: `Visitor`   
 Password: `GeoUploader`  
+
+## Setup Video explanation
+[▶ Watch the setup tutorial](https://fgcz.github.io/geo-uploader/documentation/tutorial_setup.html)
+
+## Core Facility integration
+[▶ Watch the integration tutorial](https://fgcz.github.io/geo-uploader/documentation/tutorial_integration.html)
   
 ## Table of Contents
 
@@ -123,6 +129,22 @@ flask run -p 8000
 # http://127.0.0.1:8000
 
 ```
+
+## Stopping the server
+Once the server is up and running, we can stop it again by doing the following
+```bash
+flask status
+> Server (port 8000): RUNNING
+  Process information:
+  - PID: xxxxxxx, Command: flask
+  - PID: xxxxxxx, Command: python3.1
+  - PID: xxxxxxx, Command: python3.1
+
+# Copy and paste the PID of the flask process, and run
+kill -9 {PID}
+```
+
+If you run this localy, when the PC restarts, this process will automatically be stopped, so you would have to run the server again
 
 ### Before First Use - Understanding the Software
 - Complete GEO registration following the [GEO Upload Guide](https://github.com/fgcz/geo-uploader/blob/main/documentation/GEO_instructions.md).
