@@ -1,0 +1,23 @@
+/Users/ronald/miniconda3/envs/gi_geo-uploader/lib/python3.13/site-packages/flask_admin/contrib/__init__.py:2: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  __import__('pkg_resources').declare_namespace(__name__)
+ * Serving Flask app 'manage.py'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8090
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+/Users/ronald/miniconda3/envs/gi_geo-uploader/lib/python3.13/site-packages/flask_admin/contrib/__init__.py:2: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  __import__('pkg_resources').declare_namespace(__name__)
+ * Debugger is active!
+ * Debugger PIN: 872-317-834
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/bootstrap/bootstrap.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/bootstrap/bootstrap-icons.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/jquery/jquery-3.7.1.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/jstree/jstree_style.min.css HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/bootstrap/bootstrap.bundle.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/jstree/jstree.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "GET /static/bootstrap/bootstrap-icons.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Feb/2026 14:49:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+/Users/ronald/miniconda3/envs/gi_geo-uploader/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-rjauin2f'}
+  warnings.warn(

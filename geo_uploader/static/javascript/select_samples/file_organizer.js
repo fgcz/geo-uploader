@@ -239,7 +239,7 @@ function createFileElement(filename) {
             <i class="${icon}"></i> ${filename}
         </span>
         <span class="file-actions">
-            <i class="bi bi-arrow-left move-to-unassigned-btn" onclick="moveFileToUnassigned('${filename}')" title="Move to unassigned"></i>
+            <i class="bi bi-x move-to-unassigned-btn" onclick="moveFileToUnassigned('${filename}')"></i>
         </span>
     `;
 

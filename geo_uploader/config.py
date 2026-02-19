@@ -43,6 +43,8 @@ class BaseConfig:
     LOG_LEVEL = "INFO"
     SECRET_KEY = get_required_env("SECRET_KEY")
     SERVER_HOST = get_required_env("SERVER_HOST")
+    SERVER_PORT = get_required_env("SERVER_PORT", int)
+    SERVER_URL = f"http://{SERVER_HOST}:{SERVER_PORT}"
 
     PARENT_DIR = os.path.dirname(PROJECT_ROOT)
     DEFAULT_DATA_ROOT = os.path.join(PARENT_DIR, "geo_uploader_data")
@@ -98,9 +100,6 @@ class ProductionConfig(BaseConfig):
     DEBUG = False
     LOG_LEVEL = "INFO"
 
-    SERVER_PORT = get_required_env("SERVER_PORT_PROD", int)
-    SERVER_URL = f"http://{BaseConfig.SERVER_HOST}:{SERVER_PORT}"
-
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "SQLALCHEMY_DATABASE_URI",
         default=f"sqlite:///{os.path.join(BaseConfig.DATABASE_PATH, 'prod.db')}"
@@ -111,9 +110,6 @@ class DevelopmentConfig(BaseConfig):
     ENVIRONMENT = "development"
     DEBUG = True
     LOG_LEVEL = "DEBUG"
-
-    SERVER_PORT = os.getenv("SERVER_PORT_DEV")
-    SERVER_URL = f"http://{BaseConfig.SERVER_HOST}:{SERVER_PORT}"
 
     DEFAULT_DATA_ROOT = os.path.join(BaseConfig.PARENT_DIR, "geo_uploader_dev_data")
     DATA_ROOT = os.environ.get("GEO_UPLOADER_DATA_ROOT", DEFAULT_DATA_ROOT)
