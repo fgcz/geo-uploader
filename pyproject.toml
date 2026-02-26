@@ -37,6 +37,7 @@ dependencies = [
     # File processing
     "openpyxl==3.1.5",
     "xlml==0.1.2",
+    "pandas>=3.0.1",
 
     # HTTP and external APIs
     "requests==2.32.3",

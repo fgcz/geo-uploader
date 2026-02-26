@@ -1,0 +1,19 @@
+services:
+  geo-uploader:
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .env:/app/.env
+      - .flaskenv:/app/.flaskenv
+      #- /Users/leo/code/geo_uploader_data:/geo_uploader_data
+      - ./data:/geo_uploader_data
+      - /Users/leo/code/geo-uploader:/data
+    environment:
+      - BASE_FOLDER_SELECTION=/data
+    entrypoint:
+      [
+        "bash",
+        "-c",
+        "/app/.venv/bin/flask init-db && /app/.venv/bin/flask run --port 8000 --host=0.0.0.0",
+      ]
