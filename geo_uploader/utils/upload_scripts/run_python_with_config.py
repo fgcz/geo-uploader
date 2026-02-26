@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
+import shlex
 import sys
 import os
 import subprocess
-import shutil
 from datetime import datetime
 
 
@@ -19,90 +19,28 @@ def main():
         sys.exit(1)
 
     script_options = sys.argv[1]
-
     print(f"Starting script with options: {script_options}")
+    print(f"Start time: {datetime.now()}")
 
-    # Check if conda is available
-    conda_cmd = shutil.which("conda")
-    if not conda_cmd:
-        print("Error: conda not found or not properly initialized")
-        print("Please ensure conda is installed and available in PATH")
-        sys.exit(1)
+    env = os.environ.copy()
+    env['PYTHONPATH'] = PYTHON_PATH
 
-    # Activate environment and run the Python script
-    try:
-        # For cross-platform conda activation, we'll use subprocess with shell=True
-        # and construct the command to activate environment and run python
+    # Split the options string into individual arguments
+    options_list = shlex.split(script_options)
+    python_cmd = [sys.executable, "-m", PYTHON_MODULE] + options_list
 
-        if os.name == 'nt':  # Windows
-            # Use cmd.exe for Windows
-            activate_cmd = f'conda activate gi_geo-uploader && '
-        else:  # Unix-like (Linux, Mac)
-            # Use bash for Unix-like systems
-            activate_cmd = f'eval "$(conda shell.bash hook)" && conda activate gi_geo-uploader && '
+    # Open output files for logging and run the subprocess
+    with open(OUTPUT_PATH, 'a') as stdout_f, open(ERROR_PATH, 'a') as stderr_f:
+        # Run the command with stdout/stderr redirected to files
+        result = subprocess.run(
+            python_cmd,
+            stdout=stdout_f,
+            stderr=stderr_f,
+            text=True,
+            env=env
+        )
 
-        # Set PYTHONPATH
-        env = os.environ.copy()
-        env['PYTHONPATH'] = PYTHON_PATH
-
-        # Construct the full command
-        python_cmd = f'{activate_cmd}python -m {PYTHON_MODULE} {script_options}'
-
-        # Open output files for logging
-        with open(OUTPUT_PATH, 'a') as stdout_f, open(ERROR_PATH, 'a') as stderr_f:
-            # Create a custom class to handle dual output (console + file)
-            class DualOutput:
-                def __init__(self, file_obj, console_obj):
-                    self.file = file_obj
-                    self.console = console_obj
-
-                def write(self, text):
-                    self.file.write(text)
-                    self.file.flush()
-                    self.console.write(text)
-                    self.console.flush()
-
-                def flush(self):
-                    self.file.flush()
-                    self.console.flush()
-
-            # Save original stdout/stderr
-            original_stdout = sys.stdout
-            original_stderr = sys.stderr
-
-            # Redirect to dual output
-            sys.stdout = DualOutput(stdout_f, original_stdout)
-            sys.stderr = DualOutput(stderr_f, original_stderr)
-
-            try:
-                print("Successfully activated gi_geo-uploader environment")
-
-                # Run the command
-                result = subprocess.run(
-                    python_cmd,
-                    shell=True,
-                    env=env,
-                    text=True
-                )
-
-                exit_code = result.returncode
-
-            finally:
-                # Restore original stdout/stderr
-                sys.stdout = original_stdout
-                sys.stderr = original_stderr
-
-    except Exception as e:
-        print(f"Error: Failed to activate gi_geo-uploader environment or run script: {e}")
-
-        # Try to list available environments for debugging
-        try:
-            print("Available environments:")
-            subprocess.run([conda_cmd, "env", "list"], check=False)
-        except:
-            pass
-
-        sys.exit(1)
+        exit_code = result.returncode
 
     # Check exit status
     if exit_code == 0:

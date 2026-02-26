@@ -35,116 +35,26 @@ GEO-Uploader simplifies the process of uploading bulk RNA and single-cell genomi
 - User role management and administrative oversight
 
 ## Quick Start
-
 ### Prerequisites
-- Conda/Mamba package manager
+- Docker
+- Docker Compose
 
 ### Installation
-
-#### Using Makefile (suggested for Mac/Linux)
 ```bash
-# File structure recommended
-# GeoUploader/
-# ├── geo-uploader/          # This repository
-# └── geo_uploader_data/     # Auto-created
-mkdir GeoUploader && cd GeoUploader
-git clone https://github.com/fgcz/geo-uploader.git
 cd geo-uploader
-
-# Install environment and dependencies
-make setup-env
-
-# Setup configuration files
-make setup-config
 ```
 
-### Update of the following configuration files
-- `BASE_FOLDER_SELECTION` (.flaskenv)
-
+Update docker-compose.yml  
+Update the path to a root from where you can access all you data.   
 ```bash
-nano .env 
-nano .flaskenv 
-# vim, notepad are other good options
-
-# Initialize database
-make setup-db
-# Available logins are given by default
-# (Admin, password)
-# (User1, password)
-# (User2, password)
-
-# Start development server
-conda activate gi_geo-uploader
-flask status
-flask start-local
-# flask start-local-foreground
-# Click on the links given from the terminal to access the server
-# http://127.0.0.1:8000
-
-
-# If you want to have your application run on the background
+volumes:
+  # UPDATE THIS !!
+  - /Users/user/Desktop
 ```
-### Setup without Makefile (Suggested for Windows)
+Run docker
 ```bash
-# File structure recommended
-# GeoUploader/
-# ├── geo-uploader/          # This repository
-# └── geo_uploader_data/     # Auto-created
-
-mkdir GeoUploader && cd GeoUploader
-git clone https://github.com/fgcz/geo-uploader.git
-cd geo-uploader
-
-# Create the conda environment from environment.yml
-conda env create -f environment.yml || echo "Environment might already exist"
-conda activate gi_geo-uploader
-# Install the project in editable mode
-pip install -e .
-
-# Setup configuration files
-# Copy default configuration file
-cp .env.example .env
+docker compose up --build
 ```
-
-### Update of the following configuration files
-- `BASE_FOLDER_SELECTION` (.flaskenv)
- 
-```bash
-# Edit required email configuration
-# quit nano with Ctrl+X
-nano .env  # Set MAIL_USERNAME, MAIL_APP_PASSWORD
-nano .flaskenv # SET BASE_FOLDER_SELECTION
-# vim, notepad are other options
-
-# Initialize database
-flask init-db
-# Available logins are given by default
-# (Admin, password)
-# (User1, password)
-# (User2, password)
-
-# Start server
-flask run -p 8000
-# Click on the links given from the terminal to access the server
-# http://127.0.0.1:8000
-
-```
-
-## Stopping the server
-Once the server is up and running, we can stop it again by doing the following
-```bash
-flask status
-> Server (port 8000): RUNNING
-  Process information:
-  - PID: xxxxxxx, Command: flask
-  - PID: xxxxxxx, Command: python3.1
-  - PID: xxxxxxx, Command: python3.1
-
-# Copy and paste the PID of the flask process, and run
-kill -9 {PID}
-```
-
-If you run this localy, when the PC restarts, this process will automatically be stopped, so you would have to run the server again
 
 ### Before First Use - Understanding the Software
 - Complete GEO registration following the [GEO Upload Guide](https://github.com/fgcz/geo-uploader/blob/main/documentation/GEO_instructions.md).

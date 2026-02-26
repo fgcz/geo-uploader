@@ -7,6 +7,7 @@ import click
 from datetime import datetime, timedelta
 from pathlib import Path
 from sqlalchemy.orm.mapper import configure_mappers
+from sqlalchemy import inspect
 
 from geo_uploader import create_app
 from geo_uploader.extensions import db
@@ -158,7 +159,13 @@ def init_db(env):
     """Reset the database for the specified environment."""
     try:
         with application.app_context():
-            db.drop_all()
+            inspector = inspect(db.engine)
+
+            # If any tables already exist, do nothing
+            if inspector.get_table_names():
+                print("Database already initialized. Doing nothing.")
+                return
+
             configure_mappers()
             db.create_all()
 

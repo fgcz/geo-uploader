@@ -54,9 +54,6 @@ dependencies = [
     "sphinx-rtd-theme>=1.3.0",
 ]
 
-[project.scripts]
-geo-uploader = "geo_uploader.cli:main"
-
 # Optional dependencies for different use cases
 [project.optional-dependencies]
 dev = [
