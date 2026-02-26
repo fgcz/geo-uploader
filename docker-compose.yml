@@ -1,0 +1,20 @@
+services:
+  geo-uploader:
+    container_name: geo-uploader
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .env:/app/.env
+      - .flaskenv:/app/.flaskenv
+      - ./upload_data:/geo_uploader_data
+      # UPDATE THIS !!
+      - /Users/ronald/Desktop:/upload_data
+    environment:
+      - BASE_FOLDER_SELECTION=/upload_data
+    entrypoint:
+      [
+        "bash",
+        "-c",
+        "/app/.venv/bin/flask init-db && /app/.venv/bin/flask run --port 8000 --host=0.0.0.0",
+      ]

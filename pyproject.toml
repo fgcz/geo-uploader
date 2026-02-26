@@ -37,6 +37,7 @@ dependencies = [
     # File processing
     "openpyxl==3.1.5",
     "xlml==0.1.2",
+    "pandas>=3.0.1",
 
     # HTTP and external APIs
     "requests==2.32.3",
@@ -52,9 +53,6 @@ dependencies = [
     "sphinx>=7.0.0",
     "sphinx-rtd-theme>=1.3.0",
 ]
-
-[project.scripts]
-geo-uploader = "geo_uploader.cli:main"
 
 # Optional dependencies for different use cases
 [project.optional-dependencies]
