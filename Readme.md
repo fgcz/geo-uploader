@@ -2,10 +2,8 @@
 
 A Flask web application for streamlined genomic data uploads to the NCBI GEO repository with automated metadata generation.
 
-## Credentials
+## FGCZ Geo Uploader (Guest Account)
 https://geo-uploader.fgcz.uzh.ch/   
-Username: `Visitor`   
-Password: `GeoUploader`  
 
 ## Setup Video explanation
 [▶ Watch the setup tutorial](https://fgcz.github.io/geo-uploader/documentation/tutorial_setup.html)
